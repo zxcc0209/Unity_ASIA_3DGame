@@ -5675,6 +5675,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 07a0cc5572cbdc548a69cd1cc12e38fc, type: 2}
+  conversation: {fileID: 623541061}
+  textContent: {fileID: 1686075751}
   PlayerinArea: 0
 --- !u!1001 &1591715002
 PrefabInstance:
