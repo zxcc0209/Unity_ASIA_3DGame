@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class NPC : MonoBehaviour
 {
@@ -9,15 +10,42 @@ public class NPC : MonoBehaviour
     public GameObject conversation;
     [Header("對話內容")]
     public Text textContent;
+    [Header("對話者名稱")]
+    public Text dodo;
+    [Header("間隔時間")]
+    public float time=0.001f;
+
+
 
     public bool PlayerinArea;
 
+    public enum NPCState 
+    {
+        FirstDialoug,Mission,Finish
+
+    }
+    public NPCState state = NPCState.FirstDialoug;
+    /*協同
+    private void Start()
+    {
+        StartCoroutine(Test());
+    }
+    
+    private IEnumerator Test()
+    {
+        print("嗨");
+        yield return new WaitForSeconds(2f);
+        print("2s");
+
+    }
+    */
     private void OnTriggerEnter(Collider other)
     {
         if (other.name == "小明")
         {
             PlayerinArea = true;
-            Dialoug();
+            StartCoroutine(Dialoug());
+            
         }
     }
     private void OnTriggerExit(Collider other)
@@ -25,14 +53,42 @@ public class NPC : MonoBehaviour
         if (other.name == "小明")
         {
             PlayerinArea = false;
+            stopDialoug();
+
         }
     }
-    private void Dialoug()
+    private void stopDialoug()
     {
-        //print(data.dialougA);
-        for (int i = 0; i < data.dialougA.Length; i++)
+        conversation.SetActive(false);
+        StopAllCoroutines();
+    }
+    private IEnumerator Dialoug()
+    {
+        conversation.SetActive(true);
+        textContent.text = "";
+        dodo.text = name;
+
+        string dialougString = data.dialougA;
+
+        switch (state)
         {
-            print(data.dialougA[i]);
+            case NPCState.FirstDialoug:
+                dialougString = data.dialougA;
+                break;
+            case NPCState.Mission:
+                dialougString = data.dialougB;
+                break;
+            case NPCState.Finish:
+                dialougString = data.dialougC;
+                break;
+
+        }
+        //print(data.dialougA);
+        for (int i = 0; i < dialougString.Length; i++)
+        {
+            textContent.text += dialougString[i] + "";
+            //print(data.dialougA[i]);
+            yield return new WaitForSeconds(time);
         }
     }
 }
