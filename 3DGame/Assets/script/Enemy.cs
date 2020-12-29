@@ -9,9 +9,14 @@ public class Enemy : MonoBehaviour
     [Header("停止距離"), Range(0, 50)]
     public float stopDistance = 1.2f;
 
+    [Header("攻擊冷卻時間"), Range(0, 50)]
+    public float cd = 2f;
+
     private Transform player;
     private NavMeshAgent nav;
     private Animator ani;
+
+    private float timer;
 
     private void Awake()
     {
@@ -27,6 +32,27 @@ public class Enemy : MonoBehaviour
     private void Update()
     {
         Track();
+        Attack();
+    }
+
+    private void Attack()
+    {
+        if (nav.remainingDistance < stopDistance)
+        {
+            timer += Time.deltaTime;
+
+            Vector3 pos = player.position;
+            pos.y = transform.position.y;
+
+            transform.LookAt(pos);
+
+            if (timer >= cd)
+            {
+                ani.SetTrigger("攻擊觸發");
+                timer = 0;
+            }
+        }
+        
     }
     private void Track()
     {
